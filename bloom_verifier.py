@@ -3,7 +3,11 @@ import json
 import sys
 from pathlib import Path
 
-from serpent_bloom_core import verify_eternal_seal, verify_external_fingerprints
+from serpent_bloom_core import (
+    verify_eternal_seal,
+    verify_external_fingerprints,
+    external_fingerprints_present,
+)
 
 
 def main() -> None:
@@ -32,21 +36,20 @@ def main() -> None:
         sys.stderr.write("Eternal Seal verification failed.\n")
         sys.exit(1)
 
-    target_arg = args.target
-    if target_arg:
-        target_path = Path(target_arg)
+    if args.target:
+        target_path = Path(args.target)
         if not target_path.is_file():
             sys.stderr.write(f"Target file not found: {target_path}\n")
             sys.exit(1)
         external_ok = verify_external_fingerprints(envelope, target_path=target_path)
     else:
-        external_ok = verify_external_fingerprints(envelope)
+        external_ok = external_fingerprints_present(envelope)
 
     if not external_ok:
         sys.stderr.write("External fingerprint verification failed.\n")
         sys.exit(1)
 
-    sys.stdout.write("Envelope verified.\n")
+    print("Envelope verified.")
 
 
 if __name__ == "__main__":

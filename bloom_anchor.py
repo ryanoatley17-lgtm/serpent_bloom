@@ -2,11 +2,12 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from typing import Any, Dict
 
 from serpent_bloom_core import generate_envelope, hash_file, HASH_ALGORITHM
 
 
-def build_fingerprint(target: Path) -> dict:
+def build_fingerprint(target: Path) -> Dict[str, Any]:
     return {
         "algorithm": HASH_ALGORITHM,
         "hash": hash_file(target),
@@ -36,7 +37,7 @@ def main() -> None:
     if args.output:
         Path(args.output).write_text(envelope_json)
     else:
-        sys.stdout.write(envelope_json)
+        print(envelope_json)
 
 
 if __name__ == "__main__":

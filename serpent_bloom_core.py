@@ -32,7 +32,7 @@ def mint_eternal_seal(envelope_without_seal: Dict[str, Any]) -> str:
     return _hash_bytes(canonical_dumps(payload).encode("utf-8"))
 
 
-def generate_envelope(external_fingerprints: Optional[List[Dict[str, str]]] = None,
+def generate_envelope(external_fingerprints: Optional[List[Dict[str, Any]]] = None,
                       payload: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     """
     Generates a Bloom envelope and mints an Eternal Seal that binds any supplied
@@ -55,19 +55,37 @@ def verify_eternal_seal(envelope: Dict[str, Any]) -> bool:
     return seal == expected
 
 
-def verify_external_fingerprints(envelope: Dict[str, Any], target_path: Optional[Path] = None) -> bool:
+def verify_external_fingerprints(
+    envelope: Dict[str, Any],
+    target_path: Path,
+    *,
+    allow_empty: bool = False,
+) -> bool:
+    """
+    Validates external fingerprint anchors. Requires a target_path and compares
+    its hash to recorded fingerprints. When allow_empty is True, envelopes with
+    no supported fingerprints are treated as passing.
+    """
     fingerprints = envelope.get("external_fingerprints") or []
     if not fingerprints:
-        return False
-
-    if target_path is None:
-        # Presence check only; seal verification happens separately.
-        return True
+        return allow_empty
 
     target_hash = hash_file(target_path)
+    supported_seen = False
     for fingerprint in fingerprints:
         if fingerprint.get("algorithm") != HASH_ALGORITHM:
             continue
+        supported_seen = True
         if fingerprint.get("hash") == target_hash:
             return True
+    if not supported_seen:
+        return allow_empty
     return False
+
+
+def external_fingerprints_present(envelope: Dict[str, Any]) -> bool:
+    """
+    Presence-only check for external fingerprints.
+    """
+    fingerprints = envelope.get("external_fingerprints") or []
+    return any(fp.get("algorithm") == HASH_ALGORITHM for fp in fingerprints)
