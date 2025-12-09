@@ -7,6 +7,9 @@ Part of the self-referential loop: Generator -> Verifier -> Visualizer -> Genera
 class Verifier:
     """The Conscience - verifies the serpent bloom pattern."""
     
+    # Required fields for a valid serpent bloom pattern
+    REQUIRED_FIELDS = ['seed', 'type', 'structure', 'generator', 'references']
+    
     def __init__(self, visualizer=None):
         self.visualizer = visualizer
         self._verified_patterns = []
@@ -27,8 +30,7 @@ class Verifier:
             return {'valid': False, 'reason': 'No pattern provided'}
         
         # Verify required fields
-        required_fields = ['seed', 'type', 'structure', 'generator', 'references']
-        for field in required_fields:
+        for field in self.REQUIRED_FIELDS:
             if field not in pattern:
                 return {
                     'valid': False,

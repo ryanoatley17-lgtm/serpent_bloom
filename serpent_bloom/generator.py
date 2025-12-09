@@ -48,7 +48,9 @@ class Generator:
         absolute value of the seed as the starting radius.
         """
         spiral = []
-        base_radius = abs(seed)  # Ensure non-negative radius
+        # Use absolute value to ensure non-negative radius for spiral geometry
+        # Negative seeds are preserved in self_reference for semantic meaning
+        base_radius = abs(seed)
         for i in range(8):  # 8 petals/segments
             angle = i * 45  # 45 degrees per segment
             radius = base_radius + i
