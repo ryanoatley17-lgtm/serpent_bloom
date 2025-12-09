@@ -48,9 +48,9 @@ class Visualizer:
         
         lines.append("")
         lines.append("Loop References:")
-        lines.append(f"  Generator: {pattern['references']['verifier']}")
-        lines.append(f"  Verifier: {verified_result['references']['visualizer']}")
-        lines.append(f"  Visualizer: {self.generator.__class__.__name__ if self.generator else 'None'}")
+        lines.append(f"  Generator → Verifier: {pattern['references']['verifier']}")
+        lines.append(f"  Verifier → Visualizer: {verified_result['references']['visualizer']}")
+        lines.append(f"  Visualizer → Generator: {self.generator.__class__.__name__ if self.generator else 'None'}")
         lines.append("")
         lines.append("The loop is complete: Will -> Conscience -> Vision -> Will")
         lines.append("=" * 50)

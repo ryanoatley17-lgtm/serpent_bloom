@@ -42,11 +42,16 @@ class Generator:
         return pattern
     
     def _create_spiral(self, seed):
-        """Create the spiral structure of the serpent bloom."""
+        """Create the spiral structure of the serpent bloom.
+        
+        The spiral always expands outward from the center, using the
+        absolute value of the seed as the starting radius.
+        """
         spiral = []
+        base_radius = abs(seed)  # Ensure non-negative radius
         for i in range(8):  # 8 petals/segments
             angle = i * 45  # 45 degrees per segment
-            radius = seed + i
+            radius = base_radius + i
             spiral.append({
                 'segment': i,
                 'angle': angle,
