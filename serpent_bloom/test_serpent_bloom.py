@@ -36,11 +36,26 @@ class TestGenerator(unittest.TestCase):
         structure = pattern['structure']
         self.assertEqual(len(structure), 8)  # 8 segments
         
+        # For seed=0, base_radius = abs(0) = 0, so radius = 0 + i
         for i, segment in enumerate(structure):
             self.assertEqual(segment['segment'], i)
             self.assertEqual(segment['angle'], i * 45)
-            self.assertEqual(segment['radius'], i)
+            self.assertEqual(segment['radius'], i)  # 0 + i
             self.assertEqual(segment['self_reference'], 0)
+        
+        # Test with positive seed
+        pattern2 = gen.generate(seed=5)
+        structure2 = pattern2['structure']
+        for i, segment in enumerate(structure2):
+            self.assertEqual(segment['radius'], 5 + i)  # abs(5) + i
+            self.assertEqual(segment['self_reference'], 5)
+        
+        # Test with negative seed (radius should use absolute value)
+        pattern3 = gen.generate(seed=-3)
+        structure3 = pattern3['structure']
+        for i, segment in enumerate(structure3):
+            self.assertEqual(segment['radius'], 3 + i)  # abs(-3) + i
+            self.assertEqual(segment['self_reference'], -3)
     
     def test_generator_with_verifier(self):
         """Test Generator connected to Verifier."""
