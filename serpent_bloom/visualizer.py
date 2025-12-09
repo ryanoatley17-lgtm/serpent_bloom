@@ -52,7 +52,7 @@ class Visualizer:
         lines.append(f"  Verifier → Visualizer: {verified_result['references']['visualizer']}")
         lines.append(f"  Visualizer → Generator: {self.generator.__class__.__name__ if self.generator else 'None'}")
         lines.append("")
-        lines.append("The loop is complete: Will -> Conscience -> Vision -> Will")
+        lines.append("The loop is complete: Will → Conscience → Vision → Will")
         lines.append("=" * 50)
         
         visualization = '\n'.join(lines)
